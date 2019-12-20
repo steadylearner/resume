@@ -1,0 +1,9 @@
+node_modules/
+config/
+
+target/
+
+.env
+
+ecs-params.yml
+

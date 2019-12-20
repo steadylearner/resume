@@ -8,4 +8,5 @@ edition = "2018"
 
 [dependencies]
 actix-web = { git = "https://github.com/actix/actix-web", branch = "master" }
+actix-rt = "1.0.0"
 

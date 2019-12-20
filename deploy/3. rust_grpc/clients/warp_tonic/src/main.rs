@@ -2,10 +2,16 @@
 extern crate argon2;
 extern crate rand;
 extern crate tonic;
+extern crate serde;
+extern crate serde_json;
+use serde_json::json;
 
 #[macro_use]
 extern crate warp;
-use warp::{http::StatusCode, Filter};
+use warp::{
+    // http::StatusCode,
+    Filter
+};
 extern crate console;
 use console::Style;
 
@@ -37,7 +43,7 @@ pub fn hash(credential: &[u8]) -> String {
 async fn get_hashed_user_info(id: String) -> Result<impl warp::Reply, warp::Rejection> {
     // Ignore error value for a while because of the typing problem
     // https://docs.rs/warp/0.1.20/warp/reject/fn.custom.html
-    // Currently it returns error from gRPC server
+    // Currently it prints error from gRPC server with println!("RESPONSE={:?}", response);
     // Improve it when you become familiar with the Warp
     let client = UserServiceClient::connect("http://0.0.0.0:50051").await.map(|client| client);
 
@@ -46,12 +52,11 @@ async fn get_hashed_user_info(id: String) -> Result<impl warp::Reply, warp::Reje
     });
 
     // Ignore error value for a while because of the typing problem
-    // https://docs.rs/warp/0.1.20/warp/reject/fn.custom.html
-    // Currently it returns error from gRPC server
     let response = client.unwrap().get_user(request).await.map(|response| response);
 
     println!("RESPONSE={:?}", response);
 
+    // It is required.
     let reply = match response {
         Ok(user) => {
             user
@@ -59,6 +64,8 @@ async fn get_hashed_user_info(id: String) -> Result<impl warp::Reply, warp::Reje
         Err(e) => {
             // https://docs.rs/warp/0.1.20/warp/reject/fn.custom.html
             println!("{:#?}", e);
+            // Temporay solution to make the project grow first.
+            // Use JSON later and build it with serge with success: false ?
             return Err(warp::reject::not_found())
         }
     };
@@ -73,8 +80,15 @@ async fn get_hashed_user_info(id: String) -> Result<impl warp::Reply, warp::Reje
     let full_name: String = format!("{} {}", first_name, last_name);
     let hashed_full_name = hash(full_name.as_bytes());
     // https://docs.rs/warp/0.1.20/warp/reply/index.html
-    // Use JSON later
-    Ok(warp::reply::html(hashed_full_name))
+    // Ok(warp::reply::html(hashed_full_name))
+
+    // https://github.com/serde-rs/json#constructing-json-values
+    let user_success = json!({
+        "full_name": &hashed_full_name,
+        "success": true,
+    });
+
+    Ok(warp::reply::json(&user_success))
 }
 
 // It seems warp is similar to use gulp or functional programming?
@@ -84,11 +98,8 @@ async fn main() {
     let blue = Style::new()
         .blue();
 
-    // let api_user = path!("api" / "user" / "v1");
-
     // curl 0.0.0.0:8000/api/user/v1/steadylearner
-    // curl 0.0.0.0:8000/user/steadylearner
-    let get_user = warp::path("user")
+    let get_user = path!("api" / "user" / "v1")
         .and(warp::path::param::<String>())
         .and_then(get_hashed_user_info);
 
@@ -101,6 +112,8 @@ async fn main() {
     warp::serve(routes).run(([0, 0, 0, 0], 8000)).await;
 }
 
-// 1. Prefix api/user/v1 instead of /user
-// 2. Return JSON instead of html
-// 3. More error handling if necessary.
+// Read Warp documentation
+// 1. Write a test for get_user instead of CRUL
+// 2. Modulize and Organize the API
+// 3. Make CRUD Rest API
+// 4. More error handling if necessary.

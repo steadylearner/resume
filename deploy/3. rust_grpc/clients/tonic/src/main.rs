@@ -1,6 +1,11 @@
 // https://docs.rs/chrono/0.4.9/chrono/
 extern crate argon2;
 extern crate rand;
+#[macro_use]
+extern crate warp;
+use warp::{http::StatusCode, Filter};
+extern crate console;
+use console::Style;
 
 use argon2::{
     Config,
@@ -13,7 +18,8 @@ pub mod user {
     tonic::include_proto!("user");
 }
 
-use user::{user_service_client::UserServiceClient, UserReply, UserRequest};
+// use std::future::Future;
+// use user::{user_service_client::UserServiceClient, UserReply, UserRequest};
 
 // hash(new_user.password.as_bytes())
 pub fn hash(credential: &[u8]) -> String {
@@ -26,47 +32,44 @@ pub fn hash(credential: &[u8]) -> String {
 //     verify_encoded(hash, credential).unwrap_or(false)
 // }
 
-// async fn login(
-//     credentials: User,
-//     db: Arc<Mutex<HashMap<String, User>>>,
-// ) -> Result<impl warp::Reply, warp::Rejection> {
-//     let users = db.lock().await;
-//     match users.get(&credentials.username) {
-//         None => Ok(StatusCode::BAD_REQUEST),
-//         Some(user) => {
-//             if verify(&user.password, credentials.password.as_bytes()) {
-//                 Ok(StatusCode::OK)
-//             } else {
-//                 Ok(StatusCode::UNAUTHORIZED)
-//             }
-//         }
-//     }
+// async fn get_hashed_full_name(
+//     // id: String
+// ) -> Result<impl warp::Reply, Box<dyn std::error::Error>> {
+//     let mut client = UserServiceClient::connect("http://0.0.0.0:50051").await?;
+
+//     let request = tonic::Request::new(UserRequest {
+//         // id,
+//         id: "steadylearner".to_string()
+//     });
+
+//     let response = client.get_user(request).await?;
+
+//     println!("RESPONSE={:?}", response);
+
+//     let UserReply {
+//         id: _,
+//         first_name,
+//         last_name,
+//         date_of_birth: _,
+//     } = &response.into_inner();
+
+//     let full_name: String = format!("{}{}", first_name, last_name);
+//     Ok(full_name)
 // }
 
+// It seems warp is similar to use gulp or functional programming?
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Hyper is used here. Should prefix http://
-    let mut client = UserServiceClient::connect("http://0.0.0.0:50051").await?;
+async fn main() {
+    let target: String = "0.0.0.0:8000".parse().unwrap();
+    let blue = Style::new()
+        .blue();
 
-    let request = tonic::Request::new(UserRequest {
-        // id: "It works!".into(),
-        id: "steadylearner".into(),
-    });
+    let user = warp::path("user")
+        .and(warp::path::param())
+        .map(|id: String| format!("Give the hashed full name of {}!", id));
 
-    let response = client.get_user(request).await?;
+    let routes = warp::get().and(user);
 
-    println!("RESPONSE={:?}", response);
-
-    let UserReply {
-        id: _,
-        first_name,
-        last_name,
-        date_of_birth: _,
-    } = &response.into_inner();
-
-    let full_name: String = format!("{}{}", first_name, last_name);
-
-    println!("{}", hash(full_name.as_bytes()));
-
-    Ok(())
+    println!("\nRust Warp Server ready at {}", blue.apply_to(&target));
+    warp::serve(routes).run(([0, 0, 0, 0], 8000)).await;
 }

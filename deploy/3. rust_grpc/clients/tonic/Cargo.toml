@@ -31,6 +31,8 @@ tracing-futures = "0.2"
 prost-types = "0.5"
 #
 rust-argon2 = "0.6.0"
+warp = { git = "https://github.com/seanmonstar/warp" }
+console = "0.9.1"
 
 [build-dependencies]
 tonic-build = "0.1.0-beta.1"

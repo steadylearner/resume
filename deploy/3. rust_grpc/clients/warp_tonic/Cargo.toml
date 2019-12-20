@@ -33,6 +33,8 @@ prost-types = "0.5"
 rust-argon2 = "0.6.0"
 warp = { git = "https://github.com/seanmonstar/warp" }
 console = "0.9.1"
+log = "0.4.8"
+pretty_env_logger = "0.3.1"
 
 [build-dependencies]
 tonic-build = "0.1.0-beta.1"

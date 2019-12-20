@@ -1,4 +1,6 @@
-// https://docs.rs/chrono/0.4.9/chrono/
+extern crate pretty_env_logger;
+#[macro_use] extern crate log;
+
 extern crate argon2;
 extern crate rand;
 extern crate tonic;
@@ -83,10 +85,10 @@ async fn get_hashed_user_info(id: String) -> Result<impl warp::Reply, warp::Reje
     // Ok(warp::reply::html(hashed_full_name))
 
     // https://github.com/serde-rs/json#constructing-json-values
-    let user_success = json!({
-        "full_name": &hashed_full_name,
-        "success": true,
-    });
+    // let user_success = json!({
+    //     "full_name": &hashed_full_name,
+    //     "success": true,
+    // });
 
     Ok(warp::reply::json(&user_success))
 }
@@ -112,8 +114,28 @@ async fn main() {
     warp::serve(routes).run(([0, 0, 0, 0], 8000)).await;
 }
 
-// Read Warp documentation
-// 1. Write a test for get_user instead of CRUL
-// 2. Modulize and Organize the API
-// 3. Make CRUD Rest API
-// 4. More error handling if necessary.
+// 1. Make JSON with module instead of json!, Modulize and Organize the API, Make CRUD Rest API with tests
+// 2. More error handling if necessary.
+
+// Server should be ready first.
+// I expect tests similar to what used in this post.
+// https://www.steadylearner.com/blog/read/How-to-use-CORS-and-OPTIONS-HTTP-request-with-Rust-Rocket
+// https://docs.rs/warp/0.1.20/warp/test/struct.RequestBuilder.html
+#[tokio::test]
+async fn get_user() {
+    // Use it or not?
+    let _ = pretty_env_logger::init();
+
+    // get api/user/v1/steadylearner ==> return JSON with success: true
+    // https://github.com/seanmonstar/warp/blob/master/tests/redirect.rs
+    let get_user = path!("api" / "user" / "v1")
+        .and(warp::path::param::<String>())
+        .and_then(get_hashed_user_info);
+
+    let res = warp::test::request().path("/api/user/v1/steadylearner") // 1. Define path with datas
+        .reply(&get_user).await; // 2. Use the exact payload you want to test and reply can be target, responder, reply_with.
+
+    assert_eq!(res.status(), 200, "Should return 200 OK.");
+
+    // assert_eq!(res.body(), "true", "Should return JSON with {{ 'success': true }}");
+}

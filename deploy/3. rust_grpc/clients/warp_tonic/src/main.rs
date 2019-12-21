@@ -85,10 +85,10 @@ async fn get_hashed_user_info(id: String) -> Result<impl warp::Reply, warp::Reje
     // Ok(warp::reply::html(hashed_full_name))
 
     // https://github.com/serde-rs/json#constructing-json-values
-    // let user_success = json!({
-    //     "full_name": &hashed_full_name,
-    //     "success": true,
-    // });
+    let user_success = json!({
+        "full_name": &hashed_full_name,
+        "success": true,
+    });
 
     Ok(warp::reply::json(&user_success))
 }
@@ -136,6 +136,6 @@ async fn get_user() {
         .reply(&get_user).await; // 2. Use the exact payload you want to test and reply can be target, responder, reply_with.
 
     assert_eq!(res.status(), 200, "Should return 200 OK.");
-
+    println!("{:#?}", res.body());
     // assert_eq!(res.body(), "true", "Should return JSON with {{ 'success': true }}");
 }

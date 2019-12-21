@@ -1,9 +1,12 @@
+# Heavy size folders
 node_modules/
-config/
-
 target/
 
+# Credentials(Use AWS env variables instead of them when deploy)
+config/
 .env
-
 ecs-params.yml
 
+# Because I could make Rust Warp server work, I don't need them anymore
+actix_web/
+node/

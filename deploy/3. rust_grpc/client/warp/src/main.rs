@@ -12,6 +12,7 @@ extern crate rand;
 extern crate serde;
 extern crate serde_json;
 
+// cargo doc -p warp --open
 #[macro_use]
 extern crate warp;
 use warp::{
@@ -26,13 +27,16 @@ mod crypto;
 mod models;
 // Files in handlers/ are what implements "Result<impl warp::Reply, warp::Rejection>"
 // It will be similar to controllers in Express.
+mod routes;
 mod handlers;
 use self::{
-    handlers::{
-        user::{
-            get_hashed_user_info,
-        }
+    routes::{
+        user_route,
     },
+    handlers::{
+        user_handler
+    },
+
 };
 
 // It will only work with $cargo test
@@ -45,10 +49,8 @@ async fn main() {
         .blue();
 
     // curl 0.0.0.0:8000/api/user/v1/steadylearner
-    // How to separate it?
-    let get_user = path!("api" / "user" / "v1")
-        .and(warp::path::param::<String>())
-        .and_then(get_hashed_user_info);
+    let get_user = user_route::get()
+        .and_then(user_handler::get);
 
     let api = get_user;
     // The complete form should be this with tests
@@ -60,5 +62,6 @@ async fn main() {
     warp::serve(routes).run(([0, 0, 0, 0], 8000)).await;
 }
 
-// 1. Read the documentation more. Find how to extract get_user and use it in main() and tests.rs
+// 1. Read the documentation more.
 // 2. More error handling and make CRUD Rest API with tests.
+// 3. Read the documentation more.

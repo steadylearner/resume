@@ -18,7 +18,7 @@ use crate::{
     },
 };
 
-pub async fn get_hashed_user_info(id: String) -> Result<impl warp::Reply, warp::Rejection> {
+pub async fn get(id: String) -> Result<impl warp::Reply, warp::Rejection> {
     // Ignore error value for a while because of the typing problem
     // https://docs.rs/warp/0.1.20/warp/reject/fn.custom.html
     // Currently it prints error from gRPC server with println!("RESPONSE={:?}", response);
@@ -45,7 +45,7 @@ pub async fn get_hashed_user_info(id: String) -> Result<impl warp::Reply, warp::
             // https://docs.rs/warp/0.1.20/warp/reject/fn.custom.html
             println!("{:#?}", e);
             // Temporay solution to make the project grow first.
-            // Use JSON later and build it with serge with success: false ?
+            // Use JSON later and build it with serde with success: false ?
             return Err(warp::reject::not_found())
         }
     };

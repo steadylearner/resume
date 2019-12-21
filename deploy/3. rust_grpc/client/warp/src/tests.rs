@@ -6,10 +6,11 @@ use warp::{
 use std::str;
 
 use crate::{
+    routes::{
+        user_route,
+    },
     handlers::{
-        user::{
-            get_hashed_user_info,
-        }
+        user_handler,
     },
     models::{
         user::{
@@ -27,10 +28,8 @@ use crate::{
 async fn get_user() {
     let _ = pretty_env_logger::init();
 
-    // Extract this duplicate code?
-    let get_user = path!("api" / "user" / "v1")
-        .and(warp::path::param::<String>())
-        .and_then(get_hashed_user_info);
+    let get_user = user_route::get()
+        .and_then(user_handler::get);
 
     let res = warp::test::request().path("/api/user/v1/steadylearner") // 1. Define path with datas
         .reply(&get_user).await; // 2. Use the exact payload you want to test and reply can be target, responder, reply_with.

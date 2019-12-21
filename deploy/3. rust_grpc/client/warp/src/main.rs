@@ -45,6 +45,7 @@ async fn main() {
         .blue();
 
     // curl 0.0.0.0:8000/api/user/v1/steadylearner
+    // How to separate it?
     let get_user = path!("api" / "user" / "v1")
         .and(warp::path::param::<String>())
         .and_then(get_hashed_user_info);
@@ -60,4 +61,4 @@ async fn main() {
 }
 
 // 1. Read the documentation more. Find how to extract get_user and use it in main() and tests.rs
-// 2. Make CRUD Rest API with tests, more error handling if necessary.
+// 2. More error handling and make CRUD Rest API with tests.

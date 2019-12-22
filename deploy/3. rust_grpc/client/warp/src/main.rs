@@ -54,7 +54,9 @@ async fn main() {
     let get_user = user_route::get()
         .and_then(user_handler::get);
     // curl -X DELETE -H "authorization: steadylearner" 0.0.0.0:8000/api/user/v1/f2bd8139-5044-4526-89b8-1981d6220b4
-    // No more records in Postgresql. $SELECT * FROM users WHERE id = 'f2bd8139-5044-4526-89b8-1981d6220b4';
+    // No more records in Postgresql.
+    // \c grpc;
+    // $SELECT * FROM users WHERE id = 'f2bd8139-5044-4526-89b8-1981d6220b4';
     let delete_user = user_route::delete()
         .and_then(user_handler::delete);
 
@@ -71,6 +73,8 @@ async fn main() {
     warp::serve(routes).run(([0, 0, 0, 0], 8000)).await;
 }
 
-// 1. Make a delete, create, update work with tests.(Currently, there are problems with multiple tests execution.).
-// 2. Read the documentation more.
-// 3. Include Redis in Tonic after you update its dependencies.
+// 1. Make create, update work with tests.(Currently, there are problems with multiple tests execution.).
+// 2. Read the documentation more for Response when there are errors.
+// 3. Why Browser and curl returns 405 Method not allowed? While the code should return return 404
+//    and test for it pass  Not Found for get_user with wrong id?
+// 4. Include Redis in Tonic after you update its dependencies.

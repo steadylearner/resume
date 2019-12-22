@@ -12,7 +12,6 @@ extern crate rand;
 extern crate serde;
 extern crate serde_json;
 
-// cargo doc -p warp --open
 #[macro_use]
 extern crate warp;
 use warp::{
@@ -54,8 +53,15 @@ async fn main() {
     // curl 0.0.0.0:8000/api/user/v1/steadylearner
     let get_user = user_route::get()
         .and_then(user_handler::get);
+    // curl -X DELETE -H "authorization: steadylearner" 0.0.0.0:8000/api/user/v1/f2bd8139-5044-4526-89b8-1981d6220b4
+    // No more records in Postgresql. $SELECT * FROM users WHERE id = 'f2bd8139-5044-4526-89b8-1981d6220b4';
+    let delete_user = user_route::delete()
+        .and_then(user_handler::delete);
 
-    let api = list_users.or(get_user);
+    let api = list_users
+        .or(get_user)
+        .or(delete_user);
+
     // The complete form should be this with tests
     // let api = list_users.or(get_user).or(create_user).or(update_user).or(delete_user);
 
@@ -67,3 +73,4 @@ async fn main() {
 
 // 1. Make a delete, create, update work with tests.(Currently, there are problems with multiple tests execution.).
 // 2. Read the documentation more.
+// 3. Include Redis in Tonic after you update its dependencies.

@@ -10,29 +10,33 @@ fn path_prefix() -> warp::filters::BoxedFilter<()> {
 }
 
 pub fn list() -> warp::filters::BoxedFilter<()> {
-    path_prefix()
+    warp::get()
+        .and(path_prefix())
         .and(warp::path::end())
         .boxed()
 }
 
+// It is equal to use it in main.
+// let get_user = path!("api" / "user" / "v1")
+//     .and(warp::path::param::<String>())
 pub fn get() -> warp::filters::BoxedFilter<(String, )> {
-    path_prefix()
+    warp::get()
+        .and(path_prefix())
         .and(warp::path::param::<String>())
         .boxed()
 }
 
-// pub fn list() -> warp::filters::BoxedFilter<()> {
-//     path!("api" / "user" / "v1")
-//         .and(warp::path::end())
-//         .boxed()
-// }
+pub fn delete() -> warp::filters::BoxedFilter<(String, )> {
+    // Move it to function later if necessary.
+    // pub fn exact(
+    //     name: &'static str,
+    //     value: &'static str
+    // ) -> impl Filter<Extract = (), Error = Rejection> + Copy
+    let admin_only = warp::header::exact("authorization", "steadylearner");
 
-// pub fn get() -> warp::filters::BoxedFilter<(String, )> {
-//     path!("api" / "user" / "v1")
-//         .and(warp::path::param::<String>())
-//         .boxed()
-// }
-
-// It is equal to use it in main.
-// let get_user = path!("api" / "user" / "v1")
-//     .and(warp::path::param::<String>())
+    warp::delete()
+        .and(path_prefix())
+        .and(warp::path::param::<String>())
+        .and(admin_only.clone())
+        .boxed()
+}

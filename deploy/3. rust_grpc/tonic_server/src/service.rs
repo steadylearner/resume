@@ -158,7 +158,6 @@ impl UserService for User {
         Ok(Response::new(reply))
     }
 
-    // It works.
     async fn delete_user(
         &self,
         request: Request<UserRequest>,

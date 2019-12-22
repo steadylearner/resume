@@ -1,5 +1,22 @@
 use serde_derive::{Deserialize, Serialize};
 
+// I want to use this but there are many type relevant problems with this.
+// use chrono::NaiveDate;
+
+// #[derive(Serialize, Deserialize, Debug)]
+// pub struct NewUser {
+//     pub first_name: String,
+//     pub last_name: String,
+//     pub date_of_birth: NaiveDate,
+// }
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct NewUser {
+    pub first_name: String,
+    pub last_name: String,
+    pub date_of_birth: String,
+}
+
 // Use this instead of the code below
 // https://github.com/serde-rs/json#constructing-json-values
 // let user_success = json!({

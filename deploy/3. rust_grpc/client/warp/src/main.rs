@@ -50,9 +50,16 @@ async fn main() {
     // curl 0.0.0.0:8000/api/user/v1
     let list_users = user_route::list()
         .and_then(user_handler::list);
+
     // curl 0.0.0.0:8000/api/user/v1/steadylearner
     let get_user = user_route::get()
         .and_then(user_handler::get);
+
+    // curl -X POST 0.0.0.0:8000/api/user/v1 -H "Content-Type: application/json" -d '{ "first_name": "steady", "last_name": "learner", "date_of_birth": "2019-01-01" }
+    // curl -X POST 0.0.0.0:8000/api/user/v1 -H "Content-Type: application/json" -d '{ "first_name": "another", "last_name": "user", "date_of_birth": "2019-01-01" }
+    let create_user = user_route::create()
+        .and_then(user_handler::create);
+
     // curl -X DELETE -H "authorization: steadylearner" 0.0.0.0:8000/api/user/v1/f2bd8139-5044-4526-89b8-1981d6220b4
     // No more records in Postgresql.
     // \c grpc;
@@ -62,6 +69,7 @@ async fn main() {
 
     let api = list_users
         .or(get_user)
+        .or(create_user)
         .or(delete_user);
 
     // The complete form should be this with tests

@@ -14,14 +14,14 @@ CREATE TABLE users (
 INSERT INTO users
     (first_name, last_name, date_of_birth)
 VALUES
-    ('steadylearner', 'steady', 'learner', '2019-01-01');
+    ('steady', 'learner', '2019-01-01');
 
 INSERT INTO users
     (first_name, last_name, date_of_birth)
 VALUES
-    ('mybirthdayisblackfriday', 'mybirthdayis', 'blackfriday', '2019-11-25');
+    ('mybirthdayis', 'blackfriday', '2019-11-25');
 
 INSERT INTO users
     (first_name, last_name, date_of_birth)
 VALUES
-    ('mybirthdayisnotblackfriday', 'mybirthdayis', 'notblackfriday', '2019-11-26');
+    ('mybirthdayis', 'notblackfriday', '2019-11-26');

@@ -1,13 +1,28 @@
 use warp::Filter;
+use crate::{
+    models::{
+        user::{
+            NewUser,
+        }
+    },
+};
 
-// extract this part path!("api" / "user" / "v1")
-// Just the path segment "/api/user/v1"
-// let todos = path!("api" / "user" / "v1")
-
+// It is equal to use it in main.
+// let todos = path!("api" / "user" / "v1");
 fn path_prefix() -> warp::filters::BoxedFilter<()> {
     path!("api" / "user" / "v1")
         .boxed()
 }
+
+// fn admin_only() -> warp::filters::BoxedFilter<()> {
+//     path!("api" / "user" / "v1")
+//         .boxed()
+// }
+
+// fn json_body() -> warp::filters::BoxedFilter<()> {
+//     path!("api" / "user" / "v1")
+//         .boxed()
+// }
 
 pub fn list() -> warp::filters::BoxedFilter<()> {
     warp::get()
@@ -25,6 +40,36 @@ pub fn get() -> warp::filters::BoxedFilter<(String, )> {
         .and(warp::path::param::<String>())
         .boxed()
 }
+
+pub fn create() -> warp::filters::BoxedFilter<(NewUser,)> {
+    // Its hard to debug with curl commands at this moment.
+    // Make it pass first.
+    let json_body = warp::body::content_length_limit(1024 * 16).and(warp::body::json());
+    // let json_body = warp::body::json();
+
+    warp::post()
+        .and(path_prefix())
+        .and(warp::path::end())
+        .and(json_body)
+        .boxed()
+}
+
+// // `PUT /todos/:id`
+// let update = warp::put()
+//     .and(todos_id)
+//     .and(json_body)
+//     .and(db.clone())
+//     .and_then(update_todo);
+
+// pub fn update() -> warp::filters::BoxedFilter<(String, )> {
+//     let admin_only = warp::header::exact("authorization", "steadylearner");
+
+//     warp::put()
+//         .and(path_prefix())
+//         .and(warp::path::param::<String>())
+//         .and(admin_only.clone())
+//         .boxed()
+// }
 
 pub fn delete() -> warp::filters::BoxedFilter<(String, )> {
     // Move it to function later if necessary.

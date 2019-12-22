@@ -1,10 +1,10 @@
 use tonic;
 use warp;
 
-
 use crate::{
     models::{
         user::{
+            NewUser,
             UserSuccess,
             UserSuccessList,
         }
@@ -14,6 +14,7 @@ use crate::{
         UserReply, UserRequest,
         Empty,
         Users,
+        CreateUserRequest, CreateUserReply,
         DeleteUserReply,
     },
     crypto::{
@@ -117,6 +118,45 @@ pub async fn get(id: String) -> Result<impl warp::Reply, warp::Rejection> {
     Ok(warp::reply::json(&user_success))
 }
 
+pub async fn create(create: NewUser) -> Result<impl warp::Reply, warp::Rejection> {
+    // log::debug!("create_user: {:?}", create);
+
+    let client = UserServiceClient::connect("http://0.0.0.0:50051").await
+        .map(|client| client);
+
+    let request = tonic::Request::new(CreateUserRequest {
+        first_name: create.first_name,
+        last_name: create.last_name,
+        date_of_birth: create.date_of_birth,
+    });
+
+    let response = client.unwrap().create_user(request).await
+        .map(|response| response);
+
+    println!("RESPONSE={:#?}", response);
+
+    // It is required.
+    let reply = match response {
+        Ok(new_user_reply) => {
+            new_user_reply
+        },
+        Err(e) => {
+            // https://docs.rs/warp/0.1.20/warp/reject/fn.custom.html
+            println!("{:#?}", e);
+            // return Err(warp::reject::custom(UserError))
+            // Should return custom data not valid instead of this.
+            return Err(warp::reject::not_found())
+        }
+    };
+
+    let CreateUserReply {
+        message,
+    } = &reply.into_inner();
+
+    // Handle type problem(Not implemented something) by making a new string with format!
+    Ok(warp::reply::html(format!("{}", message)))
+}
+
 pub async fn delete(id: String) -> Result<impl warp::Reply, warp::Rejection> {
     let client = UserServiceClient::connect("http://0.0.0.0:50051").await
         .map(|client| client);
@@ -139,7 +179,7 @@ pub async fn delete(id: String) -> Result<impl warp::Reply, warp::Rejection> {
             // https://docs.rs/warp/0.1.20/warp/reject/fn.custom.html
             println!("{:#?}", e);
             // return Err(warp::reject::custom(UserError))
-            // Should returncsutom unauthroized
+            // Should return custom unauthroized
             return Err(warp::reject::not_found())
         }
     };

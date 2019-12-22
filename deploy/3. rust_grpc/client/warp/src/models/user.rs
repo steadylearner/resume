@@ -1,6 +1,5 @@
 use serde_derive::{Deserialize, Serialize};
 
-// "success" should be always true for this struct. Find the better design.
 // Use this instead of the code below
 // https://github.com/serde-rs/json#constructing-json-values
 // let user_success = json!({
@@ -10,7 +9,11 @@ use serde_derive::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UserSuccess {
     pub full_name: String,
-    pub success: bool,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct UserSuccessList {
+    pub users: Vec<UserSuccess> // or Vec<Option<UseSuccess>>?
 }
 
 // // I don't need it at this point.

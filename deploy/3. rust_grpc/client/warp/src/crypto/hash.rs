@@ -1,7 +1,7 @@
 use argon2::{
     Config,
     hash_encoded,
-    // verify_encoded,
+    verify_encoded,
 };
 use rand::Rng;
 
@@ -11,6 +11,6 @@ pub fn hash_with_argon2(credential: &[u8]) -> String {
     hash_encoded(credential, &salt, &config).unwrap()
 }
 
-// pub fn verify_with_argon2(hash: &str, credential: &[u8]) -> bool {
-//     verify_encoded(hash, credential).unwrap_or(false)
-// }
+pub fn verify_with_argon2(hash: &str, credential: &[u8]) -> bool {
+    verify_encoded(hash, credential).unwrap_or(false)
+}

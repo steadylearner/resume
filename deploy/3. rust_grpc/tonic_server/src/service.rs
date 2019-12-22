@@ -31,7 +31,7 @@ impl UserService for User {
             .unwrap();
 
         let row = rows.get(0);
-        println!("{:#?}", &row);
+        // println!("{:#?}", &row);
 
         let date_of_birth: NaiveDate = row.get(3);
 

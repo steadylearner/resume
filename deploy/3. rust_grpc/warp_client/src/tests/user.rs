@@ -343,7 +343,7 @@ mod tests {
 
         // You should verify this exist in your database.
         // For example, $SELECT * FROM users;
-        // Or refer to list_users api. But it will be more complicated than this.
+        // Or refer to list_users api and request the data here. But it will be more complicated than this.
         let target = "898067d8-5787-4939-bb3e-20025ae88d4e";
         // If it(target or id) doesn't exist, it will fail at 5.
         // else all tests will pass.

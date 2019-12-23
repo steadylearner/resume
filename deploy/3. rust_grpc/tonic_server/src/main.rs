@@ -1,5 +1,6 @@
 // https://docs.rs/postgres/0.15.2/postgres/
 extern crate postgres;
+extern crate redis;
 extern crate dotenv;
 
 extern crate chrono;
@@ -24,10 +25,21 @@ mod db_connection;
 mod service;
 use crate::service::User;
 
+fn do_something() -> redis::RedisResult<()> {
+    let client = redis::Client::open("redis://127.0.0.1/")?;
+    let mut con = client.get_connection()?;
+
+    /* do something here */
+
+    Ok(())
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let addr = "0.0.0.0:50051".parse().unwrap();
     let user = User::default();
+
+    do_something();
 
     let blue = Style::new()
         .blue();

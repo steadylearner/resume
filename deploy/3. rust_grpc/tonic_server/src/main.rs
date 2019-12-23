@@ -11,7 +11,7 @@ pub mod user {
 use tonic::{transport::Server};
 
 use user::{
-    server::{UserServiceServer},
+    user_service_server::{UserServiceServer},
 };
 
 extern crate uuid;
@@ -34,6 +34,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     println!("\nRust gRPC Server ready at {}", blue.apply_to(addr));
 
-    Server::builder().serve(addr, UserServiceServer::new(user)).await?;
+    Server::builder()
+        .add_service(UserServiceServer::new(user))
+        .serve(addr)
+        .await?;
+
     Ok(())
 }
+
+

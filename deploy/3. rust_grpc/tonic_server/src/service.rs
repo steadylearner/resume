@@ -6,7 +6,7 @@ use crate::db_connection::establish_connection;
 use tonic::{Request, Response, Status};
 
 use crate::user::{
-    server::UserService, CreateUserReply, CreateUserRequest, DeleteUserReply, Empty, UpdateUserReply,
+    user_service_server::UserService, CreateUserReply, CreateUserRequest, DeleteUserReply, Empty, UpdateUserReply,
     UpdateUserRequest, UserReply, UserRequest, Users,
 };
 

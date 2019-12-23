@@ -151,7 +151,7 @@ impl UserService for User {
             }
         } else {
             UpdateUserReply {
-                message: format!("Update {} user with id {}", &number_of_rows_affected, &id),
+                message: format!("Update {} user with id {}.", &number_of_rows_affected, &id),
             }
         };
 

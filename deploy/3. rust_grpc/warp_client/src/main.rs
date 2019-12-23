@@ -99,7 +99,7 @@ async fn main() {
     warp::serve(routes).run(([0, 0, 0, 0], 8000)).await;
 }
 
-// 1. Make update work with tests.
+// 1. Make update work with tests. Modulize the test if you can.
 // 2. Read the documentation more for Response when there are errors.
 // 3. Why Browser and curl returns 405 Method not allowed? While the code should return return 404
 //    and test for it pass  Not Found for get_user with wrong id?

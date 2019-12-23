@@ -3,6 +3,7 @@ use crate::{
     models::{
         user::{
             NewUser,
+            UpdateUser,
         }
     },
 };
@@ -42,10 +43,7 @@ pub fn get() -> warp::filters::BoxedFilter<(String, )> {
 }
 
 pub fn create() -> warp::filters::BoxedFilter<(NewUser,)> {
-    // Its hard to debug with curl commands at this moment.
-    // Make it pass first.
     let json_body = warp::body::content_length_limit(1024 * 16).and(warp::body::json());
-    // let json_body = warp::body::json();
 
     warp::post()
         .and(path_prefix())
@@ -61,15 +59,17 @@ pub fn create() -> warp::filters::BoxedFilter<(NewUser,)> {
 //     .and(db.clone())
 //     .and_then(update_todo);
 
-// pub fn update() -> warp::filters::BoxedFilter<(String, )> {
-//     let admin_only = warp::header::exact("authorization", "steadylearner");
+pub fn update() -> warp::filters::BoxedFilter<(String, UpdateUser,)> {
+    let user_only = warp::header::exact("authorization", "user");
+    let json_body = warp::body::content_length_limit(1024 * 16).and(warp::body::json());
 
-//     warp::put()
-//         .and(path_prefix())
-//         .and(warp::path::param::<String>())
-//         .and(admin_only.clone())
-//         .boxed()
-// }
+    warp::put()
+        .and(path_prefix())
+        .and(warp::path::param::<String>())
+        .and(json_body)
+        .and(user_only.clone())
+        .boxed()
+}
 
 pub fn delete() -> warp::filters::BoxedFilter<(String, )> {
     // Move it to function later if necessary.

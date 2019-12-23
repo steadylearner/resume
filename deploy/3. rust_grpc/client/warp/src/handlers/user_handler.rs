@@ -5,6 +5,7 @@ use crate::{
     models::{
         user::{
             NewUser,
+            UpdateUser,
             UserSuccess,
             UserSuccessList,
         }
@@ -15,6 +16,7 @@ use crate::{
         Empty,
         Users,
         CreateUserRequest, CreateUserReply,
+        UpdateUserRequest, UpdateUserReply,
         DeleteUserReply,
     },
     crypto::{
@@ -150,6 +152,48 @@ pub async fn create(create: NewUser) -> Result<impl warp::Reply, warp::Rejection
     };
 
     let CreateUserReply {
+        message,
+    } = &reply.into_inner();
+
+    // Handle type problem(Not implemented something) by making a new string with format!
+    Ok(warp::reply::html(format!("{}", message)))
+}
+
+pub async fn update(id: String, update: UpdateUser) -> Result<impl warp::Reply, warp::Rejection> {
+    // log::debug!("update_user: {:?}", update);
+
+    let client = UserServiceClient::connect("http://0.0.0.0:50051").await
+        .map(|client| client);
+
+    // Use the default value or user data if necessary. Currently, you don't have means for that.
+    // (Except sending a requet to get user data with id.)
+    let request = tonic::Request::new(UpdateUserRequest {
+        id,
+        first_name: update.first_name,
+        last_name: update.last_name,
+        date_of_birth: update.date_of_birth,
+    });
+
+    let response = client.unwrap().update_user(request).await
+        .map(|response| response);
+
+    println!("RESPONSE={:#?}", response);
+
+    // It is required.
+    let reply = match response {
+        Ok(update_user_reply) => {
+            update_user_reply
+        },
+        Err(e) => {
+            // https://docs.rs/warp/0.1.20/warp/reject/fn.custom.html
+            println!("{:#?}", e);
+            // return Err(warp::reject::custom(UserError))
+            // Should return custom error instead of this.
+            return Err(warp::reject::not_found())
+        }
+    };
+
+    let UpdateUserReply {
         message,
     } = &reply.into_inner();
 

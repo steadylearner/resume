@@ -60,6 +60,23 @@ async fn main() {
     let create_user = user_route::create()
         .and_then(user_handler::create);
 
+    // curl -X PUT 0.0.0.0:8000/api/user/v1/steadylearner -H "authorization: user" -H "Content-Type: application/json" -d '{ "first_name": "fullstack rust", "last_name": "developer", "date_of_birth": "2019-01-01" }'
+    // It becomes {
+    //     id: "steadylearner",
+    //     first_name: "fullstack rust",
+    //     last_name: "developer",
+    //     date_of_birth: "2019-01-01",
+    // },
+    // curl -X PUT 0.0.0.0:8000/api/user/v1/steadylearner -H "authorization: user" -H "Content-Type: application/json" -d '{ "first_name": "steady", "last_name": "learner", "date_of_birth": "2019-01-01" }'
+    // It becomes {
+    //     id: "steadylearner",
+    //     first_name: "steady",
+    //     last_name: "learner",
+    //     date_of_birth: "2019-01-01",
+    // },
+    let update_user = user_route::update()
+        .and_then(user_handler::update);
+
     // curl -X DELETE -H "authorization: steadylearner" 0.0.0.0:8000/api/user/v1/f2bd8139-5044-4526-89b8-1981d6220b4
     // No more records in Postgresql.
     // \c grpc;
@@ -70,6 +87,7 @@ async fn main() {
     let api = list_users
         .or(get_user)
         .or(create_user)
+        .or(update_user)
         .or(delete_user);
 
     // The complete form should be this with tests
@@ -81,8 +99,8 @@ async fn main() {
     warp::serve(routes).run(([0, 0, 0, 0], 8000)).await;
 }
 
-// 1. Make create, update work with tests.(Currently, there are problems with multiple tests execution.).
+// 1. Make update work with tests.
 // 2. Read the documentation more for Response when there are errors.
 // 3. Why Browser and curl returns 405 Method not allowed? While the code should return return 404
 //    and test for it pass  Not Found for get_user with wrong id?
-// 4. Include Redis in Tonic after you update its dependencies.
+// 4. Include Redis in Tonic after you update its dependencies and test redis cache.

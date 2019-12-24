@@ -15,7 +15,7 @@ extern crate serde_json;
 #[macro_use]
 extern crate warp;
 use warp::{
-    Filter
+    Filter,
 };
 
 extern crate console;
@@ -46,6 +46,8 @@ async fn main() {
     let target: String = "0.0.0.0:8000".parse().unwrap();
     let blue = Style::new()
         .blue();
+
+    // You may want to extract these to functions but you will get private type errors.
 
     // curl 0.0.0.0:8000/api/user/v1
     let list_users = user_route::list()
@@ -99,8 +101,7 @@ async fn main() {
     warp::serve(routes).run(([0, 0, 0, 0], 8000)).await;
 }
 
-// 1. Make update work with tests. Modulize the test if you can.
-// 2. Read the documentation more for Response when there are errors.
+// 1. Read the Warp documentation more for Response when there are errors
+// 2. Use Redis to cache data for get_user and list_users and remove the data when update_user, delete_user.
 // 3. Why Browser and curl returns 405 Method not allowed? While the code should return return 404
 //    and test for it pass  Not Found for get_user with wrong id?
-// 4. Include Redis in Tonic after you update its dependencies and test redis cache.

@@ -1,3 +1,5 @@
+// You can use this instead of user/ after you substitue it with this and rename it user.rs
+
 use pretty_env_logger;
 use warp::Filter;
 
@@ -17,7 +19,7 @@ use crate::{
 // $cargo test -- --nocapture if you want to use println! etc.
 
 // I think that there are async problems when the compiler tests various functions for Warp.
-// When test a function and comment all others it passes.
+// When test all of them with $cargo test they all fails
 // Is this the problem of this crate or tokio::test?
 // failures:
 
@@ -28,7 +30,7 @@ use crate::{
 // Should read more documenation and ask for the author if necessary.
 
 // or test just one function each time.
-// For example, $cargo test list_users
+// For example, $cargo test list_users and it passes.
 
 // Before you test,
 // 1. Tonic gRPC server should be ready first.(It is the client of tonic_server/src/service.rs)

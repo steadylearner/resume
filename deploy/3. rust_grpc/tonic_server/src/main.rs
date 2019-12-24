@@ -1,6 +1,7 @@
 // https://docs.rs/postgres/0.15.2/postgres/
 extern crate postgres;
 extern crate redis;
+use crate::redis::Commands;
 extern crate dotenv;
 
 extern crate chrono;
@@ -26,11 +27,10 @@ mod service;
 use crate::service::User;
 
 fn do_something() -> redis::RedisResult<()> {
-    let client = redis::Client::open("redis://127.0.0.1/")?;
+    let client = redis::Client::open("redis://0.0.0.0:6379/")?;
     let mut con = client.get_connection()?;
 
-    /* do something here */
-
+    let _ : () = con.set("steady", "learner")?;
     Ok(())
 }
 

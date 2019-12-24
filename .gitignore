@@ -10,3 +10,6 @@ ecs-params.yml
 # Because I could make Rust Warp server work, I don't need them anymore
 actix_web/
 node/
+
+# Forked repostiroy
+redis-rs/

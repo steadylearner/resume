@@ -1,7 +1,8 @@
 // https://docs.rs/postgres/0.15.2/postgres/
 extern crate postgres;
 extern crate redis;
-use crate::redis::Commands;
+// extern crate serde;
+extern crate serde_json;
 extern crate dotenv;
 
 extern crate chrono;
@@ -26,20 +27,18 @@ mod db_connection;
 mod service;
 use crate::service::User;
 
-fn do_something() -> redis::RedisResult<()> {
-    let client = redis::Client::open("redis://0.0.0.0:6379/")?;
-    let mut con = client.get_connection()?;
+// Read all the documenation of redis crate.($cargo doc -p redis --open)
 
-    let _ : () = con.set("steady", "learner")?;
-    Ok(())
-}
+// Refer to these
+// 1. http://zsiciarz.github.io/24daysofrust/book/vol1/day18.html
+// 2. https://github.com/actix/examples/blob/master/redis-session/src/main.rs
+// 3. https://github.com/gabisurita/fullstack-rust/blob/master/server/src/repository.rs
+// 4. Test this function https://docs.rs/redis/0.13.0/redis/trait.Commands.html#method.getset
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let addr = "0.0.0.0:50051".parse().unwrap();
     let user = User::default();
-
-    do_something();
 
     let blue = Style::new()
         .blue();
@@ -53,5 +52,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     Ok(())
 }
+
+// 1. Read the documentations above.
+// 2. Hanlders for [Get, get_user], [Set, [create_user, update_user], [Del, [delete_user, delete_users]]
 
 

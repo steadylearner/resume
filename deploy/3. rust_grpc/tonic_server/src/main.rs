@@ -25,7 +25,9 @@ use console::Style;
 mod db_connection;
 
 mod service;
-use crate::service::User;
+use crate::service::user::postgresql_grpc::{
+    User,
+};
 
 // Read all the documenation of redis crate.($cargo doc -p redis --open)
 
@@ -53,7 +55,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-// 1. Read the documentations above.
-// 2. Hanlders for [Get, get_user], [Set, [create_user, update_user], [Del, [delete_user, delete_users]]
-
+// 1. Read serde documenation and imporve service/user/redis.rs.
+// 2. Extract a functio for get_user and list_users
+// 3. Hanlders for [Get, get_user], [Set, [create_user, update_user], [Del, [delete_user, delete_users]]
+// 4. Deploy it.
 

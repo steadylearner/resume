@@ -7,6 +7,8 @@ use serde_json;
 
 use crate::db_connection::{
     establish_postgres_connection,
+    // Use Model or separate it from db_connection.rs
+    query_list_of_users,
 };
 
 use tonic::{Request, Response, Status};
@@ -17,8 +19,9 @@ use crate::user::{
 };
 
 use super::redis::{
-    get_list_of_users,
-    set_list_of_users,
+    get,
+    set,
+    delete,
 };
 
 #[derive(Default)]
@@ -31,24 +34,26 @@ pub struct User {}
 impl UserService for User {
     // 1. Make this pass first. Then, others will be easy.
     async fn list_users(&self, request: Request<Empty>) -> Result<Response<Users>, Status> {
-        println!("Got a request: {:#?}", &request);
-        let postgres_conn = establish_postgres_connection();
-
+        // Extract it to function with println!
         let blue = Style::new()
             .blue();
+        let postgresql = "[Postgresql]";
+
+        // Extract it to function with println!
         let red = Style::new()
             .red();
         let redis = "[Redis]";
-        let postgresql = "[Postgresql]";
+
+        println!("Receive a request: {:#?}", &request);
+        let postgres_conn = establish_postgres_connection();
 
         //  list_users().is_ok() -> 1. There was a cache data in Redis. Then, return it.
         //  else -> 2. There was no data in Redis or problem with it. Return the postgresl data to user. Then, save it to Redis also.
-        let reply = match get_list_of_users() {
-            Ok(list_of_users_from_redis) => { // It returns || when there is no key set yet. Therefore,  use this logic.
-                if !list_of_users_from_redis.is_empty() { // users.len == 0
-                    // 2.
+        let reply = match get::list_of_users() {
+            Ok(list_of_users_from_redis) => {
+                if !list_of_users_from_redis.is_empty() { // If there is no data in redis or error, use postgresql.
                     println!("\n{:#?}", red.apply_to(&redis));
-                    println!("{:#?}", &list_of_users_from_redis);
+                    println!("{:#?}\n", &list_of_users_from_redis);
                     // The input and output of Redis database should be serialized.
                     // When, you need the data from it, deserialize it.
                     let users: Vec<UserReply> = serde_json::from_str(&list_of_users_from_redis).unwrap();
@@ -57,24 +62,10 @@ impl UserService for User {
                 } else {
                     println!("\n{:#?}", blue.apply_to(&postgresql));
 
-                    // https://docs.rs/postgres/0.15.2/postgres/
-                    // use functional approach? https://docs.rs/postgres/0.15.2/postgres/rows/struct.Rows.html#method.iter
-                    let mut v: Vec<UserReply> = Vec::new();
-                    // https://docs.rs/postgres/0.15.2/postgres/struct.Connection.html#method.query
-                    for row in &postgres_conn.query("SELECT * FROM users", &[]).unwrap() {
-                        let date_of_birth: NaiveDate = row.get(3);
-                        let user = UserReply {
-                            id: row.get(0),
-                            first_name: row.get(1),
-                            last_name: row.get(2),
-                            date_of_birth: date_of_birth.to_string(),
-                        };
-                        v.push(user);
-                    }
-
-                    // 1. Make set work first and test get part.
-                    let result = set_list_of_users(v.clone());
-                    println!("The result of set_list_of_users is {:#?}", result);
+                    let v: Vec<UserReply> = query_list_of_users(postgres_conn);
+                    let data_for_redis = v.clone();
+                    let result = set::list_of_users(data_for_redis);
+                    println!("The result of set::list_of_users is {:#?}", result);
 
                     let data_from_postgres = Users { users: v };
                     data_from_postgres
@@ -85,23 +76,10 @@ impl UserService for User {
                 println!("{:#?}", e);
                 println!("\n{:#?}", blue.apply_to(&postgresql));
 
-                // https://docs.rs/postgres/0.15.2/postgres/
-                // use functional approach? https://docs.rs/postgres/0.15.2/postgres/rows/struct.Rows.html#method.iter
-                let mut v: Vec<UserReply> = Vec::new();
-                // https://docs.rs/postgres/0.15.2/postgres/struct.Connection.html#method.query
-                for row in &postgres_conn.query("SELECT * FROM users", &[]).unwrap() {
-                    let date_of_birth: NaiveDate = row.get(3);
-                    let user = UserReply {
-                        id: row.get(0),
-                        first_name: row.get(1),
-                        last_name: row.get(2),
-                        date_of_birth: date_of_birth.to_string(),
-                    };
-                    v.push(user);
-                }
-
-                let result = set_list_of_users(v.clone());
-                println!("{:#?}", result);
+                let v: Vec<UserReply> = query_list_of_users(postgres_conn);
+                let data_for_redis = v.clone();
+                let result = set::list_of_users(data_for_redis);
+                println!("The result of set::list_of_users is {:#?}", result);
 
                 let data_from_postgres = Users { users: v };
                 data_from_postgres
@@ -112,27 +90,82 @@ impl UserService for User {
     }
 
     async fn get_user(&self, request: Request<UserRequest>) -> Result<Response<UserReply>, Status> {
-        println!("Got a request: {:#?}", &request);
+        let blue = Style::new()
+            .blue();
+        let red = Style::new()
+            .red();
+        let redis = "[Redis]";
+        let postgresql = "[Postgresql]";
+
+        println!("Receive a request: {:#?}", &request);
         // request is private, so use this instead to get the data in it.
         let UserRequest { id } = &request.into_inner();
-
         let postgres_conn = establish_postgres_connection();
 
-        let rows = &postgres_conn
-            .query("SELECT * FROM users WHERE id = $1", &[&id])
-            .unwrap();
+        let reply = match get::user(id.to_string()) {
+            Ok(user_from_redis) => {
+                if user_from_redis != "()" { // If there is no data in redis or error, use postgresql.
+                    println!("\n{:#?}", red.apply_to(&redis));
+                    println!("{:#?}\n", &user_from_redis);
+                    let data_from_redis: UserReply = serde_json::from_str(&user_from_redis).unwrap();
+                    data_from_redis
+                } else {
+                    println!("\n{:#?}", blue.apply_to(&postgresql));
 
-        let row = rows.get(0);
-        // println!("{:#?}", &row);
+                    let rows = &postgres_conn
+                        .query("SELECT * FROM users WHERE id = $1", &[&id])
+                        .unwrap();
 
-        let date_of_birth: NaiveDate = row.get(3);
+                    let row = rows.get(0);
+                    // println!("{:#?}", &row);
 
-        let reply = UserReply {
-            id: row.get(0),
-            first_name: row.get(1),
-            last_name: row.get(2),
-            // https://docs.rs/postgres/0.17.0-alpha.1/postgres/types/trait.FromSql.html?search=to_string
-            date_of_birth: date_of_birth.to_string(),
+                    // Extract it to function.
+                    let date_of_birth: NaiveDate = row.get(3);
+
+                    let data_from_postgres = UserReply {
+                        id: row.get(0),
+                        first_name: row.get(1),
+                        last_name: row.get(2),
+                        // https://docs.rs/postgres/0.17.0-alpha.1/postgres/types/trait.FromSql.html?search=to_string
+                        date_of_birth: date_of_birth.to_string(),
+                    };
+
+                    let data_for_redis = data_from_postgres.clone();
+                    let result = set::user(data_for_redis.id.clone(), data_for_redis);
+                    println!("The result of set::user({}) is {:#?}", id, result);
+
+                    data_from_postgres
+                }
+
+            },
+            Err(e) => {
+                println!("{:#?}", e);
+                println!("\n{:#?}", blue.apply_to(&postgresql));
+
+                let rows = &postgres_conn
+                    .query("SELECT * FROM users WHERE id = $1", &[&id])
+                    .unwrap();
+
+                let row = rows.get(0);
+                // println!("{:#?}", &row);
+
+                // Extract it to function.
+                let date_of_birth: NaiveDate = row.get(3);
+
+                let data_from_postgres = UserReply {
+                    id: row.get(0),
+                    first_name: row.get(1),
+                    last_name: row.get(2),
+                    // https://docs.rs/postgres/0.17.0-alpha.1/postgres/types/trait.FromSql.html?search=to_string
+                    date_of_birth: date_of_birth.to_string(),
+                };
+
+                let data_for_redis = data_from_postgres.clone();
+                let result = set::user(data_for_redis.id.clone(), data_for_redis);
+                println!("The result of set::user({}) is {:#?}", id, result);
+
+                data_from_postgres
+            }
         };
 
         Ok(Response::new(reply))
@@ -142,7 +175,7 @@ impl UserService for User {
         &self,
         request: Request<CreateUserRequest>,
     ) -> Result<Response<CreateUserReply>, Status> {
-        println!("Got a request: {:#?}", &request);
+        println!("Receive a request: {:#?}", &request);
         // https://crates.io/crates/uuid
         let user_id = Uuid::new_v4().to_hyphenated().to_string();
         let CreateUserRequest {
@@ -173,6 +206,22 @@ impl UserService for User {
                 ),
             }
         } else {
+            let red = Style::new()
+                .red();
+            let redis = "[Redis]";
+            println!("\n{:#?}", red.apply_to(&redis));
+
+            let data_for_redis = UserReply {
+                id: user_id.to_string(),
+                first_name: first_name.to_string(),
+                last_name: last_name.to_string(),
+                date_of_birth: date_of_birth.to_string(),
+            };
+
+            println!("Redis would save the user {} with the data {:#?}", &user_id, &data_for_redis);
+            let result = set::user(data_for_redis.id.clone(), data_for_redis);
+            println!("The result of set::user({}) is {:#?}", &user_id, &result);
+
             CreateUserReply {
                 message: format!(
                     "Create {} user with id {}.",
@@ -188,7 +237,7 @@ impl UserService for User {
         &self,
         request: Request<UpdateUserRequest>,
     ) -> Result<Response<UpdateUserReply>, Status> {
-        println!("Got a request: {:#?}", &request);
+        println!("Receive a request: {:#?}", &request);
         // https://crates.io/crates/uuid
         let UpdateUserRequest {
             id,
@@ -218,6 +267,22 @@ impl UserService for User {
                 message: format!("Fail to update the user with id {}.", id),
             }
         } else {
+            let red = Style::new()
+                .red();
+            let redis = "[Redis]";
+            println!("\n{:#?}", red.apply_to(&redis));
+
+            let data_for_redis = UserReply {
+                id: id.to_string(),
+                first_name: first_name.to_string(),
+                last_name: last_name.to_string(),
+                date_of_birth: date_of_birth.to_string(),
+            };
+
+            println!("Redis would update the user {} with the data {:#?}", &id, &data_for_redis);
+            let result = set::user(data_for_redis.id.clone(), data_for_redis);
+            println!("The result of set::user({}) is {:#?}", &id, &result);
+
             UpdateUserReply {
                 message: format!("Update {} user with id {}.", &number_of_rows_affected, &id),
             }
@@ -230,7 +295,7 @@ impl UserService for User {
         &self,
         request: Request<UserRequest>,
     ) -> Result<Response<DeleteUserReply>, Status> {
-        println!("Got a request: {:#?}", &request);
+        println!("Receive a request: {:#?}", &request);
         let UserRequest { id } = &request.into_inner();
         let postgres_conn = establish_postgres_connection();
 
@@ -243,6 +308,16 @@ impl UserService for User {
                 message: format!("Fail to delete the user with id {}.", id),
             }
         } else {
+            let red = Style::new()
+                .red();
+            let redis = "[Redis]";
+            println!("\n{:#?}", red.apply_to(&redis));
+
+            println!("Redis should remove the user with id {}", &id);
+            let result = delete::user(id.to_string());
+            // There should be a better way to handle the result.
+            println!("The result of delete::user({}) is {:#?}", &id, &result);
+
             DeleteUserReply {
                 message: format!("Remove the user with id {}.", id),
             }
@@ -255,7 +330,7 @@ impl UserService for User {
         &self,
         request: Request<Empty>,
     ) -> Result<Response<DeleteUserReply>, Status> {
-        println!("Got a request: {:#?}", &request);
+        println!("Receive a request: {:#?}", &request);
         let postgres_conn = establish_postgres_connection();
 
         let rows = &postgres_conn.query("DELETE FROM users", &[]).unwrap();
@@ -263,6 +338,16 @@ impl UserService for User {
         let reply = DeleteUserReply {
             message: format!("Remove {} user data from the database.", rows.len()),
         };
+
+        let red = Style::new()
+            .red();
+        let redis = "[Redis]";
+        println!("\n{:#?}", red.apply_to(&redis));
+
+        println!("Redis should remove all the users");
+        let result = delete::list_of_users();
+        // There should be a better way to handle the result.
+        println!("The result of delete::list_of_users() is {:#?}", &result);
 
         Ok(Response::new(reply))
     }

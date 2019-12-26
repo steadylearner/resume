@@ -57,8 +57,7 @@ async fn main() {
     let get_user = user_route::get()
         .and_then(user_handler::get);
 
-    // curl -X POST 0.0.0.0:8000/api/user/v1 -H "Content-Type: application/json" -d '{ "first_name": "steady", "last_name": "learner", "date_of_birth": "2019-01-01" }
-    // curl -X POST 0.0.0.0:8000/api/user/v1 -H "Content-Type: application/json" -d '{ "first_name": "another", "last_name": "user", "date_of_birth": "2019-01-01" }
+    // curl -X POST localhost:8000/api/user/v1 -H "Content-Type: application/json" -d '{ "first_name": "steady", "last_name": "learner", "date_of_birth": "2019-01-01" }'
     let create_user = user_route::create()
         .and_then(user_handler::create);
 

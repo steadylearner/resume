@@ -55,8 +55,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-// 1. Read serde documenation and imporve service/user/redis.rs.
-// 2. Extract a functio for get_user and list_users
-// 3. Hanlders for [Get, get_user], [Set, [create_user, update_user], [Del, [delete_user, delete_users]]
+// 1. Read serde documenation. Find how to use macro instead of manual implementation at server/user/redis.
+// 2. How to compare the response time from Redis and Postgresql programmatically with Rust and not CURL.
+// 3. Read more redis documentation.
 // 4. Deploy it.
 

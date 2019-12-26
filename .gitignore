@@ -13,3 +13,4 @@ node/
 
 # Forked repostiroy
 redis-rs/
+serde/

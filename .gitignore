@@ -14,3 +14,8 @@ node/
 # Forked repostiroy
 redis-rs/
 serde/
+
+# AWS env variables and .yml files to deploy these containers to AWS
+docker-compose.yml 
+ecs-params.yml
+aws.env

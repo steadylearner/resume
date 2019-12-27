@@ -5,13 +5,9 @@
 // https://github.com/hyperium/tonic/tree/master/tonic-build#configuration
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // It will work with src_manually_implementing_serde
-    // tonic_build::compile_protos("proto/user/user.proto").unwrap();
-    // Ok(())
-
     // It will work with src(_not_manually_implementing_serde).
     tonic_build::configure()
-        // It is included in the out/user.rs but the compiler says it can not find them.
+        // It will be included in the target/debug/out/user.rs
         .type_attribute(".user.UserReply", "#[derive(serde::Serialize, serde::Deserialize)]")
         .compile(
             &["proto/user/user.proto"],

@@ -1,5 +1,5 @@
 [package]
-name = "warp-with-tonic-grpc-server"
+name = "warp_client"
 version = "0.1.0"
 authors = ["www.steadylearner.com"]
 edition = "2018"

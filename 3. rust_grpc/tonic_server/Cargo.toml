@@ -1,7 +1,7 @@
 # It has compatibility problems with the previous project.
 # Update it later.
 [package]
-name = "user-grpc"
+name = "tonic_server"
 version = "0.1.0"
 authors = ["www.steadylearner.com"]
 edition = "2018"

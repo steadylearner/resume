@@ -9,7 +9,9 @@ use crate::user::{
 
 pub fn establish_postgres_connection() -> PostgresConnection {
     dotenv().ok();
-    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    // DATABASE_URL for local
+    // POSTGRES to test production
+    let database_url = env::var("POSTGRES").expect("It must be valid.");
     PostgresConnection::connect(database_url, TlsMode::None).unwrap()
 }
 

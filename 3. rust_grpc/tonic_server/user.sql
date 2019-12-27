@@ -1,7 +1,7 @@
 -- http://www.postgresqltutorial.com/postgresql-uuid/
 -- CREATE DATABASE grpc OWNER you;
 -- \c grpc;
--- CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- SELECT uuid_generate_v4();
 
 CREATE TABLE users (
@@ -14,14 +14,14 @@ CREATE TABLE users (
 INSERT INTO users
     (first_name, last_name, date_of_birth)
 VALUES
-    ('steady', 'learner', '2019-01-01');
+    ('steadylearner', 'steady', 'learner', '2019-01-01');
 
 INSERT INTO users
     (first_name, last_name, date_of_birth)
 VALUES
-    ('mybirthdayis', 'blackfriday', '2019-11-25');
+    ('mybirthdayisblackfriday', 'mybirthdayis', 'blackfriday', '2019-11-25');
 
 INSERT INTO users
     (first_name, last_name, date_of_birth)
 VALUES
-    ('mybirthdayis', 'notblackfriday', '2019-11-26');
+    ('mybirthdayisnotblackfriday', 'mybirthdayis', 'notblackfriday', '2019-11-26');

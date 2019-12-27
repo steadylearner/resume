@@ -19,3 +19,4 @@ serde/
 docker-compose.yml 
 ecs-params.yml
 aws.env
+*.env

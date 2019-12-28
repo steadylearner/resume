@@ -4,7 +4,11 @@ This is to show it is possible to make microservies with Rust. We can deploy the
 
 ## How to test it locally
 
-It is not easy to make all these work. To make this README.md file simple, I will assume that you are already familar with what used here.
+I will assume that you are already familar with Docker and other technologies used here. If not, please read these blog posts.
+
+1. [How to use Docker commands](https://www.steadylearner.com/blog/read/How-to-use-Docker-commands)
+2. [How to use Docker with Rust](https://www.steadylearner.com/blog/read/How-to-use-Docker-with-Rust)
+3. [Rust blog posts](https://www.steadylearner.com/blog/search/Rust)
 
 First, **$cd local** and you will see that there are **tonic_server** and **warp_client** directory.
 

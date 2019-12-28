@@ -26,4 +26,4 @@ app.listen(PORT, () => {
   console.log(`🚀 Server ready at ${target}`);
 });
 
-console.log(app);
+// console.log(app);

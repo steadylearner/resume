@@ -1,17 +1,20 @@
 # Mongoose with Docker example
 
-First, install mongodb with these Docker commands.
+This is a simple REST API example with Express and Mongoose. I made this example to prototype the Rust project. It will work with Rust Email CLI made with **Lettre**.
+
+## How to install dependencies
+
+1. Install mongodb with these Docker commands.
 
 ```console
 $docker volume create mongodbdata
 $docker run -d -v mongodbdata:/data/db --name mongo -p 27017:27017 mongo 
 ```
 
-Then, install the npm packages with $yarn
+2. Then, Install the npm packages with **$yarn or npm install**
+3. Start the Express server with **$yarn dev or node server.js**.
 
-## How to test it
-
-Start the server with **$yarn dev** or **$node server.js**. Then, use these commands.
+## How to test the REST CRUD end points with CURL
 
 1. Register an email
 

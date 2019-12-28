@@ -4,7 +4,7 @@ This is a simple project to test Node passsport API. When you visit /register or
 
 ![user-signup](https://www.steadylearner.com/static/images//post/React/user-signup.png)
 
-No frontend frameworks are used here. We don't need frontend parts to test auth parts. But, I includ them to make it more meaningful and easy to develop than use CURL commands.
+No frontend frameworks are used here. We don't need frontend parts to test auth parts. But, I include them to make it more meaningful and easy to develop than to use CURL commands.
 
 # How to test it
 
@@ -17,12 +17,14 @@ First, install Redis and Mongodb with Docker.
 
 ```console
 $docker volume create mongodbdata
-$docker run -d -v mongodbdata:/data/db --name mongo -p 27017:27017 mongo 
+$docker run -d -v mongodbdata:/data/db --name mongo -p 27017:27017 mongo
 $docker run -d --name redis -p 6379:6379 redis
 ```
 
-Then, Install the npm packages with **$yarn or npm install**. 
+Then, Install the npm packages with **$yarn or npm install**.
 
-Start the Express server with **$yarn dev or yarn serve**. When you visit http://localhost:8000, it will be empty page with navbar. the / route is used to redirect users when necessary. Test its main api at /login and /register.  
+Start the Express server with **$yarn dev or yarn serve**. When you visit http://localhost:8000, it will be empty page with navbar. the / route is used to redirect users when necessary.
+
+Test its main api at /login and /register.
 
 

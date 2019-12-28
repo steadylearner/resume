@@ -8,7 +8,7 @@ This is a simple REST API example with Express and Mongoose. I made this example
 
 ```console
 $docker volume create mongodbdata
-$docker run -d -v mongodbdata:/data/db --name mongo -p 27017:27017 mongo 
+$docker run -d -v mongodbdata:/data/db --name mongo -p 27017:27017 mongo
 ```
 
 2. Then, Install the npm packages with **$yarn or npm install**

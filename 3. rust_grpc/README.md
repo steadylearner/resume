@@ -1,6 +1,6 @@
 # Rust gRPC microservices with Warp and Tonic
 
-This is to show it is possible to make microservies with Rust. We can deploy them to AWS with Docker also. In the near future, Mongodb and REST end point for them will be also included.
+This is to show **it is possible to make microservies with Rust**. We can deploy them to AWS with Docker also. In the near future, Mongodb and REST end points from **2.express_mongoose** for them will be also included.
 
 ## How to test it locally
 
@@ -14,11 +14,11 @@ First, **$cd local** and you will see that there are **tonic_server** and **warp
 
 The role of **tonic_server** is to serve data with gRPC API. It gets data from Postgresql database and Redis cache for it.
 
-**warp_client** is a server but it is client of gRPC server. So it is named **warp_client** for the entire purpose of this project is to show gRPC full stack server and client example written in Rust.
+**warp_client** is a server but it is client of gRPC server. So it is named **warp_client** because the entire purpose of this project is to show **gRPC full stack server and client example written in Rust**.
 
-It handles routing, HTTP REST API, Testing, and potentially login etc later.
+The Warp framework handles routing, HTTP REST API, Testing, and potentially login etc later.
 
-To test all this work, you should install Postgresql, Redis first. I would use docker for it. So I let the commands for them here.
+To test all this work, you should install Postgresql and Redis first. I would use docker for it. So I let the commands for them here to help you.
 
 ```console
 // 1. Install Postgresql with volume to make data persist.
@@ -32,7 +32,7 @@ You can remove the volume later with **$docker volume rm postgresqldata** or **$
 
 Otherwise, you can also use **--network="host"** option instead of -p **port:port** part.
 
-Make some records at Postgresql database while you refer these commands.
+Make some records at Postgresql database while you refer to these commands.
 
 ```sql
 -- http://www.postgresqltutorial.com/postgresql-uuid/
@@ -72,6 +72,8 @@ Then, **$cargo run --release** in **tonic_server** and **warp_client** in separa
 ## How to test it with CURL
 
 Refer to these examples to use CURL to test the end points form warp_client. You can also compare them with tests in **warp_client/src/tests** folder.
+
+The main purpose of these end points is to return **hasehd full_name** datas from first_name and last_name given by users.
 
 1. List users
 

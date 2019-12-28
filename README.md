@@ -1,6 +1,6 @@
 # Rust Full Stack Developer Resume
 
-This is to help others to test the example projects from [Steadylearner](https://www.steadylearner.com). The easiest one to test will be **1. react_responsive**.
+This is to help others to test the example projects from [Steadylearner](https://www.steadylearner.com). The easiest one to test will be **1. react_responsive** and will be simialr to this.
 
 ![user-signup](https://www.steadylearner.com/static/images//post/React/user-signup.png)
 
@@ -19,7 +19,7 @@ I let **README.md** for each directory. Use **$git checkout deploy** after you c
 
 ## Temporary available project
 
-**3.rust_grpc** is currently availiable at AWS with ECS faragte option.
+**3.rust_grpc** is currently availiable at AWS with ECS Fargate option. You can see that it is learnign with this log.
 
 ```console
 tonic_server  RUNNING                             
@@ -43,7 +43,7 @@ It will return the data simialr to this.
 {"full_name":"$argon2i$v=19$m=4096,t=3,p=1$8opynhrDw36tn5eCJ1Gho72HwicjxLzNfOMIzfTWW3E$h+Pxzh8F7n/7o3gURErRIZt6IjYKeIP89AILoDSrbXo"}
 ```
 
-If you want to test more commands, please refer to **3.rust_grpc** folder.
+If you want to test more commands, please refer to **3.rust_grpc** folder. I don't let delete or update commands here not make other easily delete datas before people in your company test the end points.
 
 ## More examples
 

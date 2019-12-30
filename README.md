@@ -1,6 +1,8 @@
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HLNVQJ2L2YYZU)
+
 # Rust Full Stack Developer Resume
 
-This is to help others to test the example projects from [Steadylearner](https://www.steadylearner.com). The easiest one to test will be **1. react_responsive** and will be simialr to this.
+This is to help others to test the example projects from [Steadylearner](https://www.steadylearner.com). The easiest one to test will be **1. react_responsive** and will be similar to this.
 
 ![user-signup](https://www.steadylearner.com/static/images//post/React/user-signup.png)
 
@@ -17,9 +19,11 @@ and write [blog posts](https://www.steadylearner.com/blog/search/Rust) for it la
 
 I let **README.md** for each directory. Use **$git checkout deploy** after you clone this repository and follow the instructions.
 
-## Temporary available project
+## Deployed project
 
-**3.rust_grpc** is currently availiable at AWS with ECS Fargate option. You can see that it is learning with this log.
+I can make this and other projects work with a single command to AWS. Just contact me if you want. It is stopped for it is paid service.
+
+(**3.rust_grpc** is currently availiable at AWS with ECS Fargate option. You can see that it is learning with this log.)
 
 ```console
 tonic_server  RUNNING

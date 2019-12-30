@@ -34,6 +34,6 @@ The frontend part of [Steadylearner](https://www.steadylearner.com/blog/search/R
 
 I also made NPM React package [prop-passer](https://www.npmjs.com/package/prop-passer). It is not that popular but it was a good opportunity to learn how to use NPM and Functional Programming.
 
-I also made [Rust Chat App](https://www.steadylearner.com/blog/read/How-to-start-Rust-Chat-App) example. You can also find the full stack Rust version at [Rust-Full-Stack]. You can also learn how to make it with [Rust blog posts](https://www.steadylearner.com/blog/search/Rust).
+I also made [Rust Chat App](https://www.steadylearner.com/blog/read/How-to-start-Rust-Chat-App) example. You can also find the full stack Rust version at [Rust-Full-Stack](https://github.com/steadylearner/Rust-Full-Stack). You can also learn how to make it with [Rust blog posts](https://www.steadylearner.com/blog/search/Rust).
 
 If you are reading this at browser, you can also visit [React Markdown editor example](https://www.steadylearner.com/markdown).

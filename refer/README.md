@@ -52,7 +52,7 @@ alias configure-ecs="ecs-cli configure --region us-east-1 --cluster docker"
 alias start-ecs="ecs-cli up --keypair docker --capability-iam --size 2 --instance-type t2.micro --force"
 alias fargate="ecs-cli compose up --launch-type FARGATE"
 alias ecs-list="ecs-cli ps"
-alias ec2="ecs-cli compose up"
+# alias ec2="ecs-cli compose up"
 alias stop-ecs="ecs-cli compose stop"
 ```
 **$source ~/.bashrc** to use them.

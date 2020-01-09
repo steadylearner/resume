@@ -11,7 +11,7 @@ pub fn establish_postgres_connection() -> PostgresConnection {
     dotenv().ok();
     // DATABASE_URL for local
     // POSTGRES to test production
-    let database_url = env::var("POSTGRES").expect("It must be valid.");
+    let database_url = env::var("DATABASE_URL").expect("It must be valid.");
     PostgresConnection::connect(database_url, TlsMode::None).unwrap()
 }
 

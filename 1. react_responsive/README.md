@@ -20,7 +20,6 @@ If you are already familar with git, it won't be difficult. Follow the simialr p
 
 ```console
 $git clone git@github.com:steadylearner/resume.git
-$git checkout deploy
 $cd resume/1. react_responsive
 $yarn or npm install
 $yarn serve

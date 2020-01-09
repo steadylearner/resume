@@ -1,0 +1,32 @@
+version: "3"
+services:
+  # It worked.
+  warp_client:
+    image: steadylearner/warp_client:aws
+    container_name: warp_client
+    ports:
+      - "80:80"
+    healthcheck:
+      test: curl --fail -s http://localhost || exit 1
+      interval: 1m
+      timeout: 10s
+  tonic_server:
+     image: steadylearner/tonic_server:aws
+     container_name: tonic_server
+     # Debug purpose, should comment ports
+     # ports:
+     # - "50051:50051"
+     env_file:
+       - aws.env
+     healthcheck:
+       test: curl --fail -s http://localhost:50051 || exit 1
+       interval: 1m
+       timeout: 10s
+  redis:
+    image: redis
+    container_name: redis
+    healthcheck:
+      test: curl --fail -s http://localhost:6379 || exit 1
+      interval: 1m
+      timeout: 10s
+

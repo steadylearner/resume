@@ -9,10 +9,14 @@
     "pull-stream": "^3.6.14"
   },
   "scripts": {
-    "dev": "node src/index.js"
+    "fix": "eslint . --fix",
+    "moon": "node src/peers/moon/index.js",
+    "earth": "node src/peers/earth/index.js"
   },
   "devDependencies": {
     "chalk": "^3.0.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-node": "^11.0.0",
     "node-emoji": "^1.10.0"
   }
 }

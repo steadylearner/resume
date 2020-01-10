@@ -25,7 +25,7 @@ To test all this work, you should install Postgresql and Redis first. I would us
 $docker volume create postgresqldata
 $docker run -d -v postgresql:/data/db --name postgresql -p 5432:5432 postgresql
 // 2. Install Redis
-$docker rund -d --name redis -p 6379:6379 postgresql
+$docker run -d --name redis -p 6379:6379 redis
 ```
 
 You can remove the volume later with **$docker volume rm postgresqldata** or **$docker volume prune**.

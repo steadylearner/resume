@@ -17,10 +17,10 @@ const listEmails = async (_req, res) => {
 // curl -X GET localhost:8000/api/email/v1/steady@learner.com
 const getEmail = async (req, res) => {
     try {
-        const item = Email.findOne({
+        const item = await Email.findOne({
             email: req.params.email
         });
-        console.log(res.json(items));
+        console.log(res.json(item));
     } catch (e) {
         res.json({
             ...e,

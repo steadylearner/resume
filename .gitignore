@@ -1,0 +1,22 @@
+# Heavy size folders
+node_modules/
+target/
+
+# Credentials(Use AWS env variables instead of them when deploy)
+config/
+.env
+ecs-params.yml
+
+# Because I could make Rust Warp server work, I don't need them anymore
+actix_web/
+node/
+
+# Forked repostiroy
+redis-rs/
+serde/
+
+# AWS env variables and .yml files to deploy these containers to AWS
+# docker-compose.yml 
+ecs-params.yml
+aws.env
+*.env

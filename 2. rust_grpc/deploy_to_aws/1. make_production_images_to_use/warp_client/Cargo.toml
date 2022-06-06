@@ -19,7 +19,7 @@ tower = "0.3"
 warp = { git = "https://github.com/seanmonstar/warp" }
 
 # Required for wellknown gRPC types
-prost-types = "0.5"
+prost-types = "0.8"
 
 # JSON and models/
 serde = { version = "1.0", features = ["derive"] }

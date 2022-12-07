@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@nodeutils/defaults-deep": "^1.1.0",
-    "libp2p": "^0.26.2",
+    "libp2p": "^0.38.0",
     "libp2p-mplex": "^0.8.5",
     "libp2p-secio": "^0.11.1",
     "libp2p-tcp": "^0.13.2"
